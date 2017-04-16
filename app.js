@@ -1,6 +1,6 @@
 var express = require('express');
 var app = express();
-var fs = require("fs");
+var fs = require('fs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
@@ -37,14 +37,14 @@ setInterval(function(){
 app.get('/user/:id', function (req, res) {
     var id = req.params.id;
     // if myUsers['user'+id] != undefined
-    res.writeHead(200, {"Content-Type": "application/json"});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'})
     var data =  myUsers['user'+id];
     res.end( JSON.stringify(data) );
     console.log( "[Get] /user/"+id+" - get users list" );
 });
 
 app.get('/users', function (req, res) {
-    res.writeHead(200, {"Content-Type": "application/json"});
+    res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'})
     res.end( JSON.stringify(myUsers) );
     console.log( "[Get] /users - get users list" );
 });
@@ -58,7 +58,7 @@ app.post('/user', function (req, res) {
         u.profession = roles.getRandom(); 
     u.id = id;
     myUsers[key] = u;
-    res.writeHead(200, {'Content-Type': 'application/json; charset}=utf-8'})
+    res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'})
     res.end( JSON.stringify(u) );
     isUsersChanged = true;
     console.log( "[POST] /user - add new user ["+key+"] "+name+
