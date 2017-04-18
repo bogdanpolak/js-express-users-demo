@@ -24,10 +24,18 @@ var roles = {
 
 var isUsersChanged = false;
 var myUsers = new Object();
+var fname = __dirname + "/users.json"; 
+
+fs.readFile( fname, 'utf8', function (err, data) {
+    myUsers = JSON.parse( data );
+    var server = app.listen(3000, function () {
+        console.log("[] NodeJS server started and listening at http://%s:%s", 
+            server.address().address, server.address().port );
+    })
+});
 
 setInterval(function(){ 
     if (isUsersChanged) {
-        var fname = __dirname + "/users.json"; 
         fs.writeFileSync(fname, JSON.stringify(myUsers));
         console.log("[disc] writtnen Users to file");
         isUsersChanged = false;
@@ -53,24 +61,14 @@ app.post('/user', function (req, res) {
     var id = Object.keys(myUsers).length +1;
     var key = 'user'+id;
     var name = req.body.name;
-    u = req.body;
-    if ( !('profession' in req) )
-        u.profession = roles.getRandom(); 
-    u.id = id;
-    myUsers[key] = u;
+    var newUser = req.body;
+    if ( !('profession' in newUser) )
+        newUser.profession = roles.getRandom(); 
+    newUser.id = id;
+    myUsers[key] = newUser;
     res.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'})
-    res.end( JSON.stringify(u) );
+    res.end( JSON.stringify(newUser) );
     isUsersChanged = true;
     console.log( "[POST] /user - add new user ["+key+"] "+name+
         " to the list" );
 });
-
-var fname = __dirname + "/users.json"; 
-fs.readFile( fname, 'utf8', function (err, data) {
-    myUsers = JSON.parse( data );
-    var server = app.listen(3000, function () {
-        console.log("[] NodeJS server started and listening at http://%s:%s", 
-            server.address().address, server.address().port );
-    })
-});
-
